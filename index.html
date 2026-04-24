@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NQ Quarter Anatomy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #121836;
+            --bg-tertiary: #1a2142;
+            --text-primary: #e8eaed;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: #2a3355;
+            --bull-color: #10b981;
+            --bear-color: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .intro-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .intro-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .intro-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .key-concept {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .key-concept-title {
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .diagram-container {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .quarter-visual {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .quarter-box {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quarter-box:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-primary);
+        }
+
+        .quarter-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-primary);
+        }
+
+        .quarter-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .quarter-stat {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            font-size: 1.75rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: var(--bull-color);
+        }
+
+        .stat-change.negative {
+            color: var(--bear-color);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .percentage-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+
+        .percentage-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .bull-bar .percentage-fill {
+            background: var(--bull-color);
+        }
+
+        .bear-bar .percentage-fill {
+            background: var(--bear-color);
+        }
+
+        .timeframe-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .tf-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s ease;
+        }
+
+        .tf-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .tf-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 2rem;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            line-height: 32px;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-step-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-step-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted var(--text-muted);
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-align: left;
+            border-radius: 8px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .highlight-box {
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: white;
+        }
+
+        .highlight-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-text {
+            font-size: 0.875rem;
+            opacity: 0.95;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-bull {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--bull-color);
+        }
+
+        .badge-bear {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--bear-color);
+        }
+
+        .badge-neutral {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-primary);
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-side {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+        }
+
+        .comparison-side.bull {
+            border-color: var(--bull-color);
+        }
+
+        .comparison-side.bear {
+            border-color: var(--bear-color);
+        }
+
+        .comparison-header {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-item {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .info-item-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-item-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-placeholder {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            border: 2px dashed var(--border-color);
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-diagram {
+                flex-direction: column;
+            }
+
+            .flow-step::after {
+                content: '↓';
+                right: auto;
+                top: auto;
+                bottom: -1.5rem;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .quarter-visual {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+        }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .visual-example {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .candle-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 2rem;
+            height: 300px;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .candle {
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .candle-body {
+            width: 100%;
+            background: var(--bull-color);
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .candle-body.bear {
+            background: var(--bear-color);
+        }
+
+        .candle-wick {
+            width: 2px;
+            background: var(--text-muted);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .candle-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .price-level {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .price-label {
+            position: absolute;
+            right: -60px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">NQ</div>
+                <h1>Quarter Anatomy Dashboard</h1>
+            </div>
+            <div class="header-controls">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙 Dark Mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Introduction Section -->
+        <div class="intro-section">
+            <h2 class="intro-title">📚 What is Quarter Anatomy?</h2>
+            <p class="intro-text">
+                Quarter Anatomy is a powerful trading framework that divides each candle into four equal time periods (Q1, Q2, Q3, Q4) to understand where price extremes form and how they behave. This helps traders identify high-probability setups and optimal entry/exit points.
+            </p>
+
+            <div class="key-concept">
+                <div class="key-concept-title">🎯 The Core Concept</div>
+                <p class="intro-text">
+                    Each trading candle (15min, 1h, 4h, etc.) is split into 4 equal quarters. We track:
+                    <br>• <strong>Where the HIGH forms</strong> (for bearish candles)
+                    <br>• <strong>Where the LOW forms</strong> (for bullish candles)
+                    <br>• <strong>Whether it holds</strong> until the candle closes
+                </p>
+            </div>
+
+            <div class="diagram-container">
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">How a Candle is Divided</h3>
+                <div class="quarter-visual">
+                    <div class="quarter-box">
+                        <div class="quarter-label">Q1</div>
+                        <div class="quarter-time">0-25% of time</div>
+                        <div class="quarter-stat">First quarter</div>
+                    </div>
+                    <div class="quarter-box">
+                        <div class="quarter-label">Q2</div>
+                        <div class="quarter-time">25-50% of time</div>
+                        <div class="quarter-stat">Second quarter</div>
+                    </div>
+                    <div class="quarter-box">
+                        <div class="quarter-label">Q3</div>
+                        <div class="quarter-time">50-75% of time</div>
+                        <div class="quarter-stat">Third quarter</div>
+                    </div>
+                    <div class="quarter-box">
+                        <div class="quarter-label">Q4</div>
+                        <div class="quarter-time">75-100% of time</div>
+                        <div class="quarter-stat">Final quarter</div>
+                    </div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem; text-align: center; margin-top: 1rem;">
+                    For a 1-hour candle: Q1 = 0-15min, Q2 = 15-30min, Q3 = 30-45min, Q4 = 45-60min
+                </p>
+            </div>
+
+            <div class="key-concept">
+                <div class="key-concept-title">⭐ The Key Metric: Q1 Hold Rate</div>
+                <p class="intro-text">
+                    <strong>Q1 Hold Rate</strong> = The probability that once Q1 sets the extreme (high for bears, low for bulls), 
+                    it is NEVER revisited before the candle closes. A high Q1 hold rate (70%+) means Q1 is a reliable anchor point for trades.
+                </p>
+            </div>
+        </div>
+
+        <!-- Visual Example -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                Visual Example: Bull vs Bear Candles
+            </h2>
+            <p class="section-subtitle">Understanding how Q1 anchors work in practice</p>
+
+            <div class="comparison-container">
+                <div class="comparison-side bull">
+                    <div class="comparison-header">
+                        <span class="badge badge-bull">BULL</span>
+                        <span>Bullish Candle Pattern</span>
+                    </div>
+                    <div class="visual-example">
+                        <div style="margin-bottom: 1rem;">
+                            <strong style="color: var(--bull-color);">Q1 sets the LOW</strong>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                                In 70.6% of 15min bull candles, the low forms in Q1 and is never broken. 
+                                This means Q1 low = strong support for the rest of the candle.
+                            </p>
+                        </div>
+                        <div class="flow-diagram" style="flex-direction: column; gap: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Price Movement Timeline →</div>
+                            <div style="display: flex; width: 100%; gap: 0.5rem;">
+                                <div style="flex: 1; background: rgba(16, 185, 129, 0.9); padding: 1rem; border-radius: 8px; color: white; font-size: 0.75rem; text-align: center;">
+                                    <div style="font-weight: 700;">Q1: LOW forms</div>
+                                    <div>Price bottoms early</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(16, 185, 129, 0.6); padding: 1rem; border-radius: 8px; color: white; font-size: 0.75rem; text-align: center;">
+                                    <div style="font-weight: 700;">Q2-Q3: Rise</div>
+                                    <div>Price climbs</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(16, 185, 129, 0.3); padding: 1rem; border-radius: 8px; color: white; font-size: 0.75rem; text-align: center;">
+                                    <div style="font-weight: 700;">Q4: HIGH</div>
+                                    <div>Final push up</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-side bear">
+                    <div class="comparison-header">
+                        <span class="badge badge-bear">BEAR</span>
+                        <span>Bearish Candle Pattern</span>
+                    </div>
+                    <div class="visual-example">
+                        <div style="margin-bottom: 1rem;">
+                            <strong style="color: var(--bear-color);">Q1 sets the HIGH</strong>
+                            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                                In 70.7% of 15min bear candles, the high forms in Q1 and is never broken.
+                                This means Q1 high = strong resistance for the rest of the candle.
+                            </p>
+                        </div>
+                        <div class="flow-diagram" style="flex-direction: column; gap: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Price Movement Timeline →</div>
+                            <div style="display: flex; width: 100%; gap: 0.5rem;">
+                                <div style="flex: 1; background: rgba(239, 68, 68, 0.9); padding: 1rem; border-radius: 8px; color: white; font-size: 0.75rem; text-align: center;">
+                                    <div style="font-weight: 700;">Q1: HIGH forms</div>
+                                    <div>Price tops early</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(239, 68, 68, 0.6); padding: 1rem; border-radius: 8px; color: white; font-size: 0.75rem; text-align: center;">
+                                    <div style="font-weight: 700;">Q2-Q3: Fall</div>
+                                    <div>Price drops</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(239, 68, 68, 0.3); padding: 1rem; border-radius: 8px; color: white; font-size: 0.75rem; text-align: center;">
+                                    <div style="font-weight: 700;">Q4: LOW</div>
+                                    <div>Final push down</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Strategy Flow -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                How to Trade This Pattern
+            </h2>
+            <p class="section-subtitle">Step-by-step trading strategy using Q1 anchor</p>
+
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-title">Wait for Q1 to Close</div>
+                    <div class="flow-step-desc">Let the first quarter of the candle complete to see where the extreme forms</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-title">Identify the Anchor</div>
+                    <div class="flow-step-desc">Bull: Q1 low. Bear: Q1 high. This becomes your key level</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-title">Place Your Stop</div>
+                    <div class="flow-step-desc">Just beyond Q1 extreme (70% chance it won't break)</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-number">4</div>
+                    <div class="flow-step-title">Target Q4</div>
+                    <div class="flow-step-desc">Opposite extreme typically forms in Q4 (40-50% of time)</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">💡 Pro Tip: The Q1→Q4 Fade</div>
+                <div class="highlight-text">
+                    When Q1 sets the extreme, there's a 40-50% probability the opposite extreme forms in Q4. 
+                    This creates a "Q1→Q4 fade" setup: enter after Q1 close, target Q4 opposite extreme, stop just beyond Q1.
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('summary')">📈 Executive Summary</button>
+            <button class="nav-tab" onclick="showTab('distribution')">📊 Quarter Distribution</button>
+            <button class="nav-tab" onclick="showTab('timing')">⏱️ Q1 Timing</button>
+            <button class="nav-tab" onclick="showTab('conditional')">🔗 Conditional Matrix</button>
+            <button class="nav-tab" onclick="showTab('behavior')">📉 Post-Q1 Behavior</button>
+            <button class="nav-tab" onclick="showTab('hourly')">🕐 Hourly Analysis</button>
+            <button class="nav-tab" onclick="showTab('weekly')">📅 Day of Week</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="summary" class="tab-content active">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">📈</span>
+                    Executive Summary - All Timeframes
+                </h2>
+                <p class="section-subtitle">Quick overview of Q1 performance across all timeframes. Higher Q1 hold rate = stronger pattern.</p>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-item-label">Best Timeframe (Q1 Hold)</div>
+                        <div class="info-item-value">15min & 30min (70.6-71.0%)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-label">Fastest Q1 Commitment</div>
+                        <div class="info-item-value">15min (60.6% in first 20%)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-label">Weakest Pattern</div>
+                        <div class="info-item-value">1D (35.9% hold rate)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-label">Total Candles Analyzed</div>
+                        <div class="info-item-value">810,587 candles</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timeframe</th>
+                                <th>Sample Size</th>
+                                <th>Bull Q1-LOD Hold %</th>
+                                <th>Bear Q1-HOD Hold %</th>
+                                <th>Q1 Speed (0-20%)</th>
+                                <th>Post-Q1 Range/ATR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">🎯 Key Insight</div>
+                    <div class="highlight-text">
+                        <strong>15min and 30min timeframes show the strongest Q1 anchor patterns</strong> with ~71% hold rates.
+                        This means on 15-minute candles, when Q1 sets the low (bull) or high (bear), there's a 70%+ chance 
+                        it won't be broken before the candle closes. These are the most reliable timeframes for Q1-based trading strategies.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="distribution" class="tab-content">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Quarter Distribution - Where Extremes Land
+                </h2>
+                <p class="section-subtitle">Shows which quarter contains the high and low for bull and bear candles</p>
+
+                <div class="timeframe-selector" id="tfSelector"></div>
+
+                <div class="comparison-container">
+                    <div class="comparison-side bear">
+                        <div class="comparison-header">
+                            <span class="badge badge-bear">BEAR</span>
+                            <span>Bear Candles</span>
+                        </div>
+                        <div id="bearDistribution"></div>
+                    </div>
+                    <div class="comparison-side bull">
+                        <div class="comparison-header">
+                            <span class="badge badge-bull">BULL</span>
+                            <span>Bull Candles</span>
+                        </div>
+                        <div id="bullDistribution"></div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">📖 How to Read This</div>
+                    <div class="highlight-text">
+                        For <strong>BEAR candles</strong>: We want to see HIGH in Q1 (anchor) and LOW in Q4 (target).<br>
+                        For <strong>BULL candles</strong>: We want to see LOW in Q1 (anchor) and HIGH in Q4 (target).<br><br>
+                        A clean Q1-anchor pattern = Q1 sets the directional extreme, Q4 sets the opposite extreme.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="timing" class="tab-content">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">⏱️</span>
+                    Within-Q1 Timing - Speed of Extreme Printing
+                </h2>
+                <p class="section-subtitle">How quickly within Q1 does the extreme form? Faster = tighter stop placement possible.</p>
+
+                <div class="timeframe-selector" id="tfSelectorTiming"></div>
+
+                <div id="timingContent"></div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">💡 Trading Application</div>
+                    <div class="highlight-text">
+                        <strong>High 0-20% rates (60%+)</strong> mean the extreme typically forms in the first 20% of Q1.
+                        For a 1-hour candle, that's the first 3 minutes. This allows for <strong>very tight stop placement</strong>
+                        early in Q1, making risk/reward more favorable.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="conditional" class="tab-content">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">🔗</span>
+                    Conditional Matrix - Q1 Anchor to Q4 Target
+                </h2>
+                <p class="section-subtitle">Given Q1 sets the directional extreme, where does the opposite extreme land?</p>
+
+                <div class="timeframe-selector" id="tfSelectorConditional"></div>
+
+                <div id="conditionalContent"></div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">🎯 Most Actionable Data</div>
+                    <div class="highlight-text">
+                        Look at the <strong>"Q1 → Q4"</strong> row. This shows: when the anchor extreme forms in Q1,
+                        what percentage of time does the opposite extreme resolve in Q4? High percentages (40-50%+) 
+                        create strong Q1→Q4 fade opportunities. For example, on 15min: Bear HOD in Q1 → 41.2% chance LOW forms in Q4.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="behavior" class="tab-content">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">📉</span>
+                    Post-Q1 Behavior - What Happens After Q1?
+                </h2>
+                <p class="section-subtitle">Movement and volatility in Q2-Q4 after Q1 sets the extreme</p>
+
+                <div class="timeframe-selector" id="tfSelectorBehavior"></div>
+
+                <div id="behaviorContent"></div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">📊 Understanding Range vs Drift</div>
+                    <div class="highlight-text">
+                        <strong>Range/ATR</strong>: Total price oscillation in Q2-Q4 (normalized by ATR). Higher = more volatility.<br>
+                        <strong>Drift/ATR</strong>: Net directional movement in Q2-Q4. Near zero = price chops without trend after Q1.<br><br>
+                        Near-zero drift with non-trivial range confirms Q1 is the structural phase, Q2-Q4 are resolution/chop phases.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hourly" class="tab-content">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">🕐</span>
+                    Hourly Analysis - Best Times to Trade
+                </h2>
+                <p class="section-subtitle">Q1 anchor strength by hour of day (Eastern Time)</p>
+
+                <div class="timeframe-selector" id="tfSelectorHourly"></div>
+
+                <div id="hourlyContent"></div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">⏰ Session Insights</div>
+                    <div class="highlight-text">
+                        <strong>Strongest Q1 patterns</strong>: 16:00 (RTH close), 18:00 (Globex open), 20:00-22:00 (Asia session)<br>
+                        <strong>Weakest Q1 patterns</strong>: 09:00 (RTH open - chaotic price discovery)<br><br>
+                        Session transitions typically show the strongest Q1 structure. Avoid trading Q1 setups during RTH open hour.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="weekly" class="tab-content">
+            <div class="section-card">
+                <h2 class="section-title">
+                    <span class="section-icon">📅</span>
+                    Day of Week Analysis
+                </h2>
+                <p class="section-subtitle">Q1 anchor strength by trading day. Sunday = Globex Asia/London overlap.</p>
+
+                <div class="timeframe-selector" id="tfSelectorWeekly"></div>
+
+                <div id="weeklyContent"></div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">📆 Weekly Pattern</div>
+                    <div class="highlight-text">
+                        <strong>Sunday (Globex)</strong> consistently shows the strongest Q1 structure across timeframes.<br>
+                        <strong>Friday afternoons</strong> show the weakest patterns (partial trading day, closes at 16:00 ET).<br><br>
+                        Use day-of-week as a session filter: prioritize Sunday-Thursday Q1 setups, be cautious on Fridays.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>NQ Quarter Anatomy Report | Data: 2014-12-30 → 2026-04-17 | Author: @Dokakuri on X</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">Interactive dashboard created for educational purposes</p>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙 Dark Mode';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️ Light Mode';
+            }
+        }
+
+        // Tab Navigation
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.nav-tab');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Data
+        const summaryData = [
+            { tf: '15min', n: 256087, bullHold: 70.6, bearHold: 70.7, speed: 60.6, range: 0.85 },
+            { tf: '30min', n: 127863, bullHold: 71.0, bearHold: 70.7, speed: 61.6, range: 0.86 },
+            { tf: '20min', n: 191892, bullHold: 66.2, bearHold: 66.1, speed: 54.7, range: 0.88 },
+            { tf: '1h', n: 64742, bullHold: 67.8, bearHold: 66.4, speed: 57.7, range: 0.86 },
+            { tf: '45min', n: 83494, bullHold: 66.2, bearHold: 65.3, speed: 58.4, range: 0.90 },
+            { tf: '2h', n: 31210, bullHold: 64.8, bearHold: 62.9, speed: 56.7, range: 0.87 },
+            { tf: '3h', n: 19935, bullHold: 65.5, bearHold: 63.7, speed: 51.1, range: 0.86 },
+            { tf: '4h', n: 15210, bullHold: 59.6, bearHold: 56.6, speed: 54.6, range: 0.89 },
+            { tf: '12h', n: 5099, bullHold: 55.3, bearHold: 51.2, speed: 46.3, range: 0.88 },
+            { tf: '6h', n: 11417, bullHold: 54.5, bearHold: 52.2, speed: 53.7, range: 0.90 },
+            { tf: '1D', n: 3510, bullHold: 35.9, bearHold: 35.9, speed: 30.2, range: 0.94 },
+            { tf: '1W', n: 590, bullHold: 75.1, bearHold: 76.3, speed: 31.4, range: 0.93 }
+        ];
+
+        const distributionData = {
+            '15min': {
+                bear: { q1: 70.7, q2: 17.6, q3: 8.9, q4: 2.8, q1Low: 11.4, q2Low: 18.5, q3Low: 27.0, q4Low: 43.0 },
+                bull: { q1: 11.6, q2: 17.8, q3: 26.5, q4: 44.1, q1Low: 70.6, q2Low: 18.0, q3Low: 8.6, q4Low: 2.8 }
+            },
+            '1h': {
+                bear: { q1: 66.4, q2: 17.1, q3: 12.0, q4: 4.5, q1Low: 11.6, q2Low: 15.1, q3Low: 23.7, q4Low: 49.7 },
+                bull: { q1: 11.1, q2: 13.5, q3: 24.0, q4: 51.4, q1Low: 67.8, q2Low: 16.6, q3Low: 11.5, q4Low: 4.1 }
+            },
+            '4h': {
+                bear: { q1: 56.6, q2: 22.3, q3: 13.9, q4: 7.2, q1Low: 8.8, q2Low: 14.7, q3Low: 22.6, q4Low: 53.9 },
+                bull: { q1: 7.3, q2: 11.8, q3: 21.4, q4: 59.5, q1Low: 59.6, q2Low: 20.9, q3Low: 13.1, q4Low: 6.4 }
+            }
+        };
+
+        // Populate Summary Table
+        function populateSummaryTable() {
+            const tbody = document.getElementById('summaryTable');
+            tbody.innerHTML = summaryData.map(row => `
+                <tr>
+                    <td><strong>${row.tf}</strong></td>
+                    <td>${row.n.toLocaleString()}</td>
+                    <td>
+                        ${row.bullHold}%
+                        <div class="percentage-bar bull-bar">
+                            <div class="percentage-fill" style="width: ${row.bullHold}%"></div>
+                        </div>
+                    </td>
+                    <td>
+                        ${row.bearHold}%
+                        <div class="percentage-bar bear-bar">
+                            <div class="percentage-fill" style="width: ${row.bearHold}%"></div>
+                        </div>
+                    </td>
+                    <td>${row.speed}%</td>
+                    <td>${row.range}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Create timeframe selectors
+        function createTFSelectors() {
+            const timeframes = ['15min', '30min', '1h', '4h', '12h'];
+            const selectors = ['tfSelector', 'tfSelectorTiming', 'tfSelectorConditional', 'tfSelectorBehavior', 'tfSelectorHourly', 'tfSelectorWeekly'];
+            
+            selectors.forEach(id => {
+                const container = document.getElementById(id);
+                if (container) {
+                    container.innerHTML = timeframes.map(tf => 
+                        `<button class="tf-btn ${tf === '15min' ? 'active' : ''}" onclick="selectTimeframe('${tf}', '${id}')">${tf}</button>`
+                    ).join('');
+                }
+            });
+        }
+
+        function selectTimeframe(tf, containerId) {
+            const buttons = document.querySelectorAll(`#${containerId} .tf-btn`);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content based on section
+            if (containerId === 'tfSelector') {
+                updateDistribution(tf);
+            }
+        }
+
+        function updateDistribution(tf) {
+            const data = distributionData[tf];
+            if (!data) return;
+
+            // Bear distribution
+            document.getElementById('bearDistribution').innerHTML = `
+                <div style="margin: 1rem 0;">
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        <strong>HIGH Distribution</strong> (Where does the high form?)
+                    </div>
+                    <div class="info-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Q1 (Anchor)</div>
+                            <div class="stat-value">${data.bear.q1}%</div>
+                            <div class="percentage-bar bear-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q1}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q2</div>
+                            <div class="stat-value">${data.bear.q2}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q2}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q3</div>
+                            <div class="stat-value">${data.bear.q3}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q3}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q4</div>
+                            <div class="stat-value">${data.bear.q4}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q4}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin: 1.5rem 0 1rem;">
+                        <strong>LOW Distribution</strong> (Where does the low form?)
+                    </div>
+                    <div class="info-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Q1</div>
+                            <div class="stat-value">${data.bear.q1Low}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q1Low}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q2</div>
+                            <div class="stat-value">${data.bear.q2Low}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q2Low}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q3</div>
+                            <div class="stat-value">${data.bear.q3Low}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q3Low}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q4 (Target)</div>
+                            <div class="stat-value">${data.bear.q4Low}%</div>
+                            <div class="percentage-bar bear-bar">
+                                <div class="percentage-fill" style="width: ${data.bear.q4Low}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Bull distribution
+            document.getElementById('bullDistribution').innerHTML = `
+                <div style="margin: 1rem 0;">
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        <strong>LOW Distribution</strong> (Where does the low form?)
+                    </div>
+                    <div class="info-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Q1 (Anchor)</div>
+                            <div class="stat-value">${data.bull.q1Low}%</div>
+                            <div class="percentage-bar bull-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q1Low}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q2</div>
+                            <div class="stat-value">${data.bull.q2Low}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q2Low}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q3</div>
+                            <div class="stat-value">${data.bull.q3Low}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q3Low}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q4</div>
+                            <div class="stat-value">${data.bull.q4Low}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q4Low}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin: 1.5rem 0 1rem;">
+                        <strong>HIGH Distribution</strong> (Where does the high form?)
+                    </div>
+                    <div class="info-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Q1</div>
+                            <div class="stat-value">${data.bull.q1}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q1}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q2</div>
+                            <div class="stat-value">${data.bull.q2}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q2}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q3</div>
+                            <div class="stat-value">${data.bull.q3}%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q3}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Q4 (Target)</div>
+                            <div class="stat-value">${data.bull.q4}%</div>
+                            <div class="percentage-bar bull-bar">
+                                <div class="percentage-fill" style="width: ${data.bull.q4}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize
+        populateSummaryTable();
+        createTFSelectors();
+        updateDistribution('15min');
+
+        // Add timing content
+        document.getElementById('timingContent').innerHTML = `
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Q1 0-20% (Fastest)</div>
+                    <div class="stat-value">60.6%</div>
+                    <div class="stat-change positive">Extreme forms in first 20% of Q1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Q1 0-40%</div>
+                    <div class="stat-value">78.6%</div>
+                    <div class="stat-change positive">Within first 40% of Q1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Practical Example</div>
+                    <div class="stat-value">1h = 3min</div>
+                    <div class="stat-change neutral">60% of extremes form in first 3 minutes</div>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
+                On 15-minute candles, 60.6% of Q1 anchors form in the first 20% of Q1 (first ~48 seconds!). 
+                This ultra-fast commitment allows for extremely tight stop placement.
+            </p>
+        `;
+
+        // Add conditional content
+        document.getElementById('conditionalContent').innerHTML = `
+            <div class="comparison-container">
+                <div class="comparison-side bear">
+                    <div class="comparison-header">
+                        <span class="badge badge-bear">BEAR</span>
+                        <span>When HOD is in Q1...</span>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">LOD → Q1</div>
+                            <div class="stat-value">7.5%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: 7.5%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">LOD → Q2</div>
+                            <div class="stat-value">20.6%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: 20.6%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">LOD → Q3</div>
+                            <div class="stat-value">30.7%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: 30.7%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">LOD → Q4 🎯</div>
+                            <div class="stat-value">41.2%</div>
+                            <div class="percentage-bar bear-bar">
+                                <div class="percentage-fill" style="width: 41.2%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-side bull">
+                    <div class="comparison-header">
+                        <span class="badge badge-bull">BULL</span>
+                        <span>When LOD is in Q1...</span>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">HOD → Q1</div>
+                            <div class="stat-value">7.6%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: 7.6%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">HOD → Q2</div>
+                            <div class="stat-value">19.7%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: 19.7%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">HOD → Q3</div>
+                            <div class="stat-value">30.1%</div>
+                            <div class="percentage-bar">
+                                <div class="percentage-fill" style="width: 30.1%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">HOD → Q4 🎯</div>
+                            <div class="stat-value">42.6%</div>
+                            <div class="percentage-bar bull-bar">
+                                <div class="percentage-fill" style="width: 42.6%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add behavior content
+        document.getElementById('behaviorContent').innerHTML = `
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Post-Q1 Range/ATR (Mean)</div>
+                    <div class="stat-value">0.83</div>
+                    <div class="stat-change neutral">Price oscillates ~83% of daily ATR in Q2-Q4</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Post-Q1 Drift/ATR (Mean)</div>
+                    <div class="stat-value">0.00</div>
+                    <div class="stat-change neutral">Near-zero directional follow-through</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Interpretation</div>
+                    <div class="stat-value">Q1 = Decision</div>
+                    <div class="stat-change neutral">Q2-Q4 = Consolidation/Chop</div>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
+                The near-zero drift with non-trivial range confirms Q1 is the structural/directional phase. 
+                After Q1, price oscillates without significant trend continuation—making Q1 the key decision point.
+            </p>
+        `;
+
+        // Add hourly content
+        document.getElementById('hourlyContent').innerHTML = `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hour (ET)</th>
+                            <th>Bull Q1 Hold %</th>
+                            <th>Bear Q1 Hold %</th>
+                            <th>Combined Score</th>
+                            <th>Session</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: rgba(16, 185, 129, 0.1);">
+                            <td><strong>16:00</strong></td>
+                            <td>92.5%</td>
+                            <td>90.2%</td>
+                            <td>91.5%</td>
+                            <td><span class="badge badge-bull">RTH Close</span></td>
+                        </tr>
+                        <tr style="background: rgba(16, 185, 129, 0.1);">
+                            <td><strong>18:00</strong></td>
+                            <td>85.5%</td>
+                            <td>85.0%</td>
+                            <td>85.3%</td>
+                            <td><span class="badge badge-bull">Globex Open</span></td>
+                        </tr>
+                        <tr>
+                            <td>20:00</td>
+                            <td>73.5%</td>
+                            <td>71.3%</td>
+                            <td>72.5%</td>
+                            <td>Asia Session</td>
+                        </tr>
+                        <tr>
+                            <td>02:00</td>
+                            <td>73.1%</td>
+                            <td>72.8%</td>
+                            <td>73.0%</td>
+                            <td>Overnight</td>
+                        </tr>
+                        <tr style="background: rgba(239, 68, 68, 0.1);">
+                            <td><strong>09:00</strong></td>
+                            <td>29.9%</td>
+                            <td>31.2%</td>
+                            <td>30.5%</td>
+                            <td><span class="badge badge-bear">RTH Open</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
+                Session transitions (16:00 RTH close, 18:00 Globex open) show 85-91% Q1 hold rates. 
+                Avoid 09:00 RTH open hour—chaotic price discovery makes Q1 anchors unreliable (only 30% hold rate).
+            </p>
+        `;
+
+        // Add weekly content
+        document.getElementById('weeklyContent').innerHTML = `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Bull Q1 Hold %</th>
+                            <th>Bear Q1 Hold %</th>
+                            <th>Combined Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: rgba(16, 185, 129, 0.1);">
+                            <td><strong>Sunday</strong> 🌐</td>
+                            <td>73.2%</td>
+                            <td>71.4%</td>
+                            <td>72.3%</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>68.3%</td>
+                            <td>66.6%</td>
+                            <td>67.5%</td>
+                        </tr>
+                        <tr>
+                            <td>Wednesday</td>
+                            <td>68.2%</td>
+                            <td>66.5%</td>
+                            <td>67.4%</td>
+                        </tr>
+                        <tr>
+                            <td>Monday</td>
+                            <td>67.4%</td>
+                            <td>67.0%</td>
+                            <td>67.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Thursday</td>
+                            <td>67.8%</td>
+                            <td>66.2%</td>
+                            <td>67.0%</td>
+                        </tr>
+                        <tr style="background: rgba(239, 68, 68, 0.1);">
+                            <td><strong>Friday</strong> 📉</td>
+                            <td>66.6%</td>
+                            <td>65.4%</td>
+                            <td>66.0%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
+                Sunday (Globex Asia/London overlap) consistently strongest. Friday weakest due to partial trading day. 
+                Use as session filter: prioritize Sunday-Thursday setups.
+            </p>
+        `;
+    </script>
+</body>
+</html>
